@@ -1,0 +1,32 @@
+<body>
+
+   {{# each products}}
+    
+    <div class="row bg-info d-flex justify-content-around mx-auto mt-2 mb-3 "> 
+        {{# each this}}
+     
+        <div class="col-sm-6 col-md-6 col-xl-3 p-3 d-flex justify-content-center ">
+            <div class="card bg-white" style="width: 18rem;">
+                <img class="img-thumbnail mx-auto d-block" src="{{this.imgpath}}" alt="">
+                <div class="card-body">
+                    
+                    <h5 class="card-title text-center font-weight-bolder text-secondary">{{this.title}}</h5>
+                    <p class="card-text text-center ">{{this.description}}</p>
+                
+                    <div class="row ">
+                        <div class="col price">${{this.price}}</div>
+                        <div class="col ">
+                            <a  href="#" class="btn btn-success float-right">Add to Cart</a>
+                        </div> 
+                    </div>    
+                </div>
+            </div>
+        </div>
+        
+   
+        {{/each}}
+     </div>
+    
+   {{/each}}
+   
+</body>
