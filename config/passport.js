@@ -1,39 +1,41 @@
-const passport = require('passport')
-const local = require('passport-local').Strategy
-const user = require('../model/user')
+const LocalStrategy = require('passport-local').Strategy;
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-//To store the user session
-passport.serializeUser((user, done)=>
-{
-    done(null, user.id)
-})
+// Load User model
+const User = require('../model/user');
 
-passport.deserializeUser((id, user)=>
-{
-    user.findById(id, (err, user)=>{
-        done(err, user)
-    })
-})
-
-passport.use('local.signup', new local({
-    usernameFeild:'email',
-    passwordFeild:'password',
-    passReqToCallback:true
-},(req, email, password, done)=>{
-    user.findOne({'email':email}, (err, user)=>{
-        if(err){
-            return done(err)
+module.exports = function(passport) {
+  passport.use(
+    new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+      // Match user
+      User.findOne({
+        email: email
+      }).then(user => {
+        if (!user) {
+          return done(null, false, { message: 'That email is not registered' });
         }
-        if(user){
-            return done(null, false, {meassage:'email already in use'})
-        }
-        const newUser = new user()
-        newUser.email = email
-        newUser.passport = newUser.encryptpassword(passport)
-        newUser.save((err, res)=>{
-          if(err){
-              return done(err);
-          }  
-          return done(null, newUser);
+
+        // Match password
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+        //   if (err) throw err;
+          if (isMatch) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: 'Password incorrect' });
+          }
+        });
+      });
     })
-})}))
+  );
+
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
+  });
+};

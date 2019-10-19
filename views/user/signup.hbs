@@ -26,28 +26,38 @@
   
     <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
         <h1 style="color: black; text-align: center">SIGNUP</h1>
+        {{>messages }}
         <div class="wrapper  wrapper--w780">
             <div class="card card-3">
                 <div class="card-heading"></div>
                 <div class="card-body">
+                    {{!-- {{# if errors }}{{!=}} {{null}}
+
+                        <div class="alert alert-danger" role="alert">
+                        {{errors.msg}}
+                        </div>
+                    {{/ if}} --}}
                     <h2 class="title">Registration Info</h2>
                     <form action='../user/signup' method="POST" >
                         <div class="input-group">
-                            <input class="input--style-3" type="text" placeholder="Name" name="name" required>
+                            <input class="input--style-3"
+                             type="text" placeholder="Name"
+                              name="name"
+                               required>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3 js-datepicker" type="text" required placeholder="Birthdate" name="birthday">
+                            <input class="input--style-3 js-datepicker" type="email" required placeholder="Email" name="email">
                             <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                         </div>
                         
                         <div class="input-group">
-                            <input class="input--style-3" required type="email" placeholder="Email" name="email">
+                            <input class="input--style-3" required type="password" placeholder="Password" name="password">
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" required type="passsword" placeholder="Password" name="phone">
+                            <input class="input--style-3" required type="password" placeholder="Confirm Password" name="password1">
                         </div>
                         <div class="p-t-10">
-                            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                            {{!-- <input type="hidden" name="_csrf" value="{{csrfToken}}"> --}}
                             <button class="btnn btnn--pill btnn--green" type="submit">Submit</button>
                         </div>
                     </form>

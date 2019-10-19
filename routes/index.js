@@ -1,12 +1,12 @@
 var express = require('express')
 var router = express.Router()
 var product = require('../model/product')
-var csurf = require('csurf')
+// var csurf = require('csurf')
 const passport = require('passport')
 
 
-const csrufprotection = csurf()
-router.use(csrufprotection)
+// const csrufprotection = csurf()
+// router.use(csrufprotection)
 
 /* GET home page. */
 router.get('/', (req, res, next)=>{
@@ -24,16 +24,17 @@ router.get('/', (req, res, next)=>{
 
 // USER router
 
-router.post('/user/signup',passport.authenticate('local.signup',{
-  successRedirect:'/profile',
-  failureRedirect:'/signup',
-  failureFlash:true
-}))
+// router.post('/user/signup',passport.authenticate('local.signup',{
+//   successRedirect:'/profile',
+//   failureRedirect:'/signup',
+//   failureFlash:true
+// }))
 
 
-router.get('/user/signup',(req, res, next)=>{
-  res.render('user/signup',{csrfToken:req.csrfToken()})
-})
+// router.get('/user/signup',(req, res, next)=>{
+//   res.render('user/signup')
+//   // res.render('user/signup',{csrfToken:req.csrfToken()})
+// })
 
 router.get('/profile', (req, res)=>{
   res.render('user/profile')
