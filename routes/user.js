@@ -44,8 +44,8 @@ router.post('/signup', (req, res)=>{
             //User exisr
             if(user){
                 errors.push({msg:'email already exist'})
-                req.flash('error_msg', errors.msg)
-                console.log(errors.msg)
+                // req.flash('error_msg', errors[msg])
+                console.log(errors)
                 res.render('user/signup',{
                     errors,
                     name,

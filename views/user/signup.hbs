@@ -26,7 +26,8 @@
   
     <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
         <h1 style="color: black; text-align: center">SIGNUP</h1>
-        {{>messages }}
+        {{!-- {{>messages }} --}}
+     
         <div class="wrapper  wrapper--w780">
             <div class="card card-3">
                 <div class="card-heading"></div>
@@ -37,6 +38,18 @@
                         {{errors.msg}}
                         </div>
                     {{/ if}} --}}
+                    {{isnt errors=''}}
+                       {{#each errors}}
+                            {{#each this}}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{this}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {{/each}}
+                        {{/each}}
+                    {{isnt}}    
                     <h2 class="title">Registration Info</h2>
                     <form action='../user/signup' method="POST" >
                         <div class="input-group">
