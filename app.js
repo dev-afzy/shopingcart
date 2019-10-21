@@ -18,32 +18,31 @@ var indexRouter = require('./routes/index');
 var user = require('./routes/user')
 var app = express();
 
+// //To avail login variable all in views
+// app.use((req, res, next)=>{
+//   res.locals.user = req.isAuthenticated()
+//   next()
+
+// })
+
 mongoose.connect('mongodb://localhost:27017/shoping',   
   {useNewUrlParser:true, 
   useUnifiedTopology: true})
   .then(()=>console.log('mongodb connected'))
   .catch(()=>console.log('some error occured in connection'))
   
-
-require('./config/passport')
 // view engine setup
 app.engine('.hbs',expresshbs({defaultLayout:'layout', extname:'.hbs'}))
 app.set('view engine', '.hbs');
 
-// app.set('view engine', 'hbs')
-// app.set('views', temp)
-
-
 //Body parser
-
 app.use(express.urlencoded({extended:false}))
 
 //Express-session
-
 app.use(session({
   secret: 'secret',
   resave: true,
-  saveUninitialized: true,
+  saveUninitialized: false,
 
 }))
 
@@ -51,9 +50,10 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(flash())
-//Global var
 
+app.use(flash())
+
+//Global var
 app.use((req, res, next)=>
 {
   res.locals.success_msg = req.flash('success_msg');
