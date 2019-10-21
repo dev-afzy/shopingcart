@@ -2,6 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+
 // Load User model
 const User = require('../model/user');
 
@@ -39,3 +40,13 @@ module.exports = function(passport) {
     });
   });
 };
+
+
+// function isLoggedIn(req, res, next) {
+//   if (req.isAuthenticated())  // <-- typo here
+//       return next();
+//   res.redirect('/');
+// }
+
+
+// module.exports = isLoggedIn

@@ -32,6 +32,18 @@
                 <div class="card-heading"></div>
                 <div class="card-body">
                     <h2 class="title">LOG IN</h2>
+                     {{isnt errorss=''}}
+                       {{#each errorss}}
+                            {{#each this}}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{this}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {{/each}}
+                        {{/each}}
+                    {{isnt}}    
                     <form action="../user/login" method="post" >
                         <div class="input-group">
                             <input class="input--style-3" type="text" placeholder="Email" name="email">

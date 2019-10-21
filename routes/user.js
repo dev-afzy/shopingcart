@@ -2,11 +2,18 @@ const express = require('express')
 const  router =express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-// const {ensureAuthenticated} = require('../config/auth')
+const logedin = require('../config/passport')
+const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth')
 
 //Model
-
 const User = require('../model/user')
+
+//profile
+router.get('/profile',ensureAuthenticated, (req, res)=> res.render('user/profile'))
+
+router.use('/', forwardAuthenticated,(req, res, next)=>{
+    return next()
+})
 
 //Login
 router.get('/login',(req, res)=> res.render('user/login'))
@@ -14,8 +21,7 @@ router.get('/login',(req, res)=> res.render('user/login'))
 //Register
 router.get('/signup',(req, res)=> res.render('user/signup',))
 
-//profile
-router.get('/profile', (req, res)=> res.render('user/profile'))
+
 
 //REgister handle
 router.post('/signup', (req, res)=>{
@@ -87,19 +93,30 @@ router.post('/signup', (req, res)=>{
 //Login handle
 
 router.post('/login', (req, res, next)=>{
-    passport.authenticate('local', function(err, user, info) {
+    const {email} = req.body
+    let errorss = []
+    passport.authenticate('local', (err, user, info)=> {
         if (err) { return next(err); }
-        if (!user) { 
+        // if (user.email !== email) {
+        //     console.log(errorss)
+        //     errorss.push({msg:'Email not exist'})
+        //     return res.render('user/login', {errorss, email})
+        // }
+        if(!user){    
             console.log(req.body)
-             return res.redirect('login') }
-        req.logIn(user, function(err) {
+            errorss.push({msg:'Email or password is incorrect'})
+            console.log(errorss)
+        return res.render('user/login', {errorss, email}) 
+        }
+           
+        req.logIn(user, (err)=> {
           if (err) { return next(err); }
-          return res.redirect('profile')
-        });
+          res.redirect('profile')
+        })
       })(req, res, next)
 })
 
-//LOGIN
+//LOgout
 
 router.get('/logout', (req, res)=>
 {
@@ -108,4 +125,5 @@ router.get('/logout', (req, res)=>
     res.redirect('login')
 })
 
-module.exports =router
+
+module.exports =router;
