@@ -8,8 +8,7 @@ const passport = require('passport')
 const User = require('../model/user')
 
 //profile
-router.get('/profile',isAuthenticated, (req, res)=> 
-{res.render('user/profile')})
+router.get('/profile',isAuthenticated, (req, res)=> res.render('user/profile'))
 
 router.use('/', forwardAuthenticated, (req, res, next)=>{
     next()

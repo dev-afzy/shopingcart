@@ -21,35 +21,21 @@ router.get('/', (req, res, next)=>{
   
 })
 
-
-// USER router
-
-// router.post('/user/signup',passport.authenticate('local.signup',{
-//   successRedirect:'/profile',
-//   failureRedirect:'/signup',
-//   failureFlash:true
-// }))
-
-
-// router.get('/user/signup',(req, res, next)=>{
-//   res.render('user/signup')
-//   // res.render('user/signup',{csrfToken:req.csrfToken()})
-// })
-
 router.get('/profile', (req, res)=>{
   res.render('user/profile')
 })
 
 router.get('/cart/:id', (req, res)=>{
-  var product = req.params.id
-  var cart = new cart(req.session.cart ? req.session.cart: {})
+  var productid = req.params.id
+  var cart = new Cart(req.session.cart ? req.session.cart: {})
 
-  product.findOne(productid, (req, res)=>{
+  product.findById(productid, (err, product)=>{
     if (err){
-      return err
+      console.log(err)
     }
-    cart.add(productid, product)
-    req.session.cart= cart
+    
+    cart.add(product, productid)
+    req.session.cart = cart
     console.log(req.session.cart)
     res.redirect('/')
   })

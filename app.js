@@ -64,10 +64,10 @@ app.use((req, res, next)=>
  next()
 })
 
-app.use(session({secret:'mysupersecrate', resave:false, saveUninitialized:false}))
+// app.use(session({secret:'mysupersecrate', resave:false, saveUninitialized:false}))
 app.use(express.static(path.join(__dirname, 'public')));
 
-// //To avail login variable all in views
+//To avail login variable all in views
 app.use((req, res, next)=>{
   res.locals.login = req.isAuthenticated()
   res.locals.session= req.session
