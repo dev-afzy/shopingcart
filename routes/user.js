@@ -2,31 +2,21 @@ const express = require('express')
 const  router =express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-// const {isAuthenticated, forwardAuthenticated} = require('../config/auth')
 
-// function checkAuth(req, res, next) {
-//     if (!req.session.email) {
-//       res.send('You are not authorized to view this page');
-//     } else {
-//       next();
-//     }
-//   }
+
 //Model
 const User = require('../model/user')
 
 //profile
-router.get('/profile',isAuthenticated, (req, res)=> res.render('user/profile'))
+router.get('/profile',isAuthenticated, (req, res)=> 
+{res.render('user/profile')})
 
-router.use('/', forwardAuthenticated,(req, res, next)=>{
-    return next()
+router.use('/', forwardAuthenticated, (req, res, next)=>{
+    next()
 })
-
-//Login
-router.get('/login',(req, res)=> res.render('user/login'))
 
 //Register
 router.get('/signup',(req, res)=> res.render('user/signup',))
-
 
 //REgister handle
 router.post('/signup', (req, res)=>{
@@ -96,6 +86,9 @@ router.post('/signup', (req, res)=>{
     
 })
 
+//Login
+router.get('/login',(req, res)=> res.render('user/login'))
+
 //Login handle
 
 router.post('/login', (req, res, next)=>{
@@ -145,6 +138,6 @@ function forwardAuthenticated(req, res, next) {
       return next();
     }
     res.redirect('/');      
-}
+ }
 
 module.exports =router;

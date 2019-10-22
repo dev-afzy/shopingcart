@@ -3,7 +3,7 @@ var router = express.Router()
 var product = require('../model/product')
 // var csurf = require('csurf')
 const passport = require('passport')
-
+const Cart = require('../model/cart')
 
 // const csrufprotection = csurf()
 // router.use(csrufprotection)
@@ -38,5 +38,20 @@ router.get('/', (req, res, next)=>{
 
 router.get('/profile', (req, res)=>{
   res.render('user/profile')
+})
+
+router.get('/cart/:id', (req, res)=>{
+  var product = req.params.id
+  var cart = new cart(req.session.cart ? req.session.cart: {})
+
+  product.findOne(productid, (req, res)=>{
+    if (err){
+      return err
+    }
+    cart.add(productid, product)
+    req.session.cart= cart
+    console.log(req.session.cart)
+    res.redirect('/')
+  })
 })
 module.exports = router

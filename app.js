@@ -16,6 +16,12 @@ var app = express()
 
 //passport config
 require('./config/passport')(passport)
+// //To avail login variable all in views
+// app.use((req, res, next)=>{
+//   res.locals.login = req.isAuthenticated()
+//   res.locals.session= req.session
+//   next()
+// })
 
 var indexRouter = require('./routes/index');
 var user = require('./routes/user')
@@ -40,8 +46,7 @@ app.use(session({
   secret: 'secret',
   resave: true,
   saveUninitialized: false,
-  store: new mongostore({mongooseConnection : mongoose.connection}),
-  cookie:{maxAge: 180 * 60 *1000}
+  
 }))
 
 //passport middleware
@@ -59,19 +64,18 @@ app.use((req, res, next)=>
  next()
 })
 
-//To avail login variable all in views
+app.use(session({secret:'mysupersecrate', resave:false, saveUninitialized:false}))
+app.use(express.static(path.join(__dirname, 'public')));
+
+// //To avail login variable all in views
 app.use((req, res, next)=>{
   res.locals.login = req.isAuthenticated()
   res.locals.session= req.session
   next()
 })
 
-app.use(session({secret:'mysupersecrate', resave:false, saveUninitialized:false}))
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', indexRouter);
 app.use('/user', user);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
