@@ -10,20 +10,15 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const passport = require('passport')
 const hbs = require('hbs')
+const mongostore = require('connect-mongo')(session)
+var app = express()
+
 
 //passport config
 require('./config/passport')(passport)
 
 var indexRouter = require('./routes/index');
 var user = require('./routes/user')
-var app = express();
-
-// //To avail login variable all in views
-// app.use((req, res, next)=>{
-//   res.locals.user = req.isAuthenticated()
-//   next()
-
-// })
 
 mongoose.connect('mongodb://localhost:27017/shoping',   
   {useNewUrlParser:true, 
@@ -33,23 +28,25 @@ mongoose.connect('mongodb://localhost:27017/shoping',
   
 // view engine setup
 app.engine('.hbs',expresshbs({defaultLayout:'layout', extname:'.hbs'}))
-app.set('view engine', '.hbs');
+app.set('view engine', '.hbs')
 
-//Body parser
-app.use(express.urlencoded({extended:false}))
+app.use(logger('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
 
 //Express-session
 app.use(session({
   secret: 'secret',
   resave: true,
   saveUninitialized: false,
-
+  store: new mongostore({mongooseConnection : mongoose.connection}),
+  cookie:{maxAge: 180 * 60 *1000}
 }))
 
 //passport middleware
 app.use(passport.initialize())
 app.use(passport.session())
-
 
 app.use(flash())
 
@@ -62,10 +59,13 @@ app.use((req, res, next)=>
  next()
 })
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+//To avail login variable all in views
+app.use((req, res, next)=>{
+  res.locals.login = req.isAuthenticated()
+  res.locals.session= req.session
+  next()
+})
+
 app.use(session({secret:'mysupersecrate', resave:false, saveUninitialized:false}))
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -2,14 +2,20 @@ const express = require('express')
 const  router =express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-const logedin = require('../config/passport')
-const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth')
+// const {isAuthenticated, forwardAuthenticated} = require('../config/auth')
 
+// function checkAuth(req, res, next) {
+//     if (!req.session.email) {
+//       res.send('You are not authorized to view this page');
+//     } else {
+//       next();
+//     }
+//   }
 //Model
 const User = require('../model/user')
 
 //profile
-router.get('/profile',ensureAuthenticated, (req, res)=> res.render('user/profile'))
+router.get('/profile',isAuthenticated, (req, res)=> res.render('user/profile'))
 
 router.use('/', forwardAuthenticated,(req, res, next)=>{
     return next()
@@ -20,6 +26,7 @@ router.get('/login',(req, res)=> res.render('user/login'))
 
 //Register
 router.get('/signup',(req, res)=> res.render('user/signup',))
+
 
 //REgister handle
 router.post('/signup', (req, res)=>{
@@ -73,6 +80,7 @@ router.post('/signup', (req, res)=>{
                         //save user
                         newuser.save()
                         .then(user=>{
+                            // req.session.email = email;
                             req.flash('success_msg', 'welcome')
                             res.redirect('profile')
                         })
@@ -109,6 +117,7 @@ router.post('/login', (req, res, next)=>{
            
         req.logIn(user, (err)=> {
           if (err) { return next(err); }
+        //   req.session.email = email;
           res.redirect('profile')
         })
       })(req, res, next)
@@ -120,8 +129,22 @@ router.get('/logout', (req, res)=>
 {
     req.logOut()
     req.flash('success_msg', 'logout successfully')
+    // delete req.session.email;
     res.redirect('login')
 })
 
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    req.flash('error_msg', 'Please log in to view that resource');
+    res.redirect('/user/signup');
+  }
+function forwardAuthenticated(req, res, next) {
+    if (!req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/');      
+}
 
 module.exports =router;

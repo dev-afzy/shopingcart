@@ -14,17 +14,13 @@
         <i class="fas fa-user text-white"></i>  User managment
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        {{# if login}}
-          <a class="dropdown-item text-secondary" href="/user/profile">Profile</a>
+         
+            <a class="dropdown-item text-secondary" href="/user/profile">Profile</a>
             <a class="dropdown-item text-secondary" href="#">Another action</a>
             <div class="dropdown-divider"></div>
               <a class="dropdown-item text-secondary" href="/user/logout">Logout</a>
-            </div>  
-          {{ else }}  
-            <a class="dropdown-item text-secondary" href="/user/login">Login</a>
-            <a class="dropdown-item text-secondary" href="/user/signup">Signup</a>
-          {{/if}}
-          
+            </div>
+         
       </li>
     </ul>
   </div>
