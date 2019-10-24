@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const passport = require('passport')
 
 
+
 //Model
 const User = require('../model/user')
 

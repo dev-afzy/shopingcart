@@ -7,6 +7,11 @@ const Cart = require('../model/cart')
 
 // const csrufprotection = csurf()
 // router.use(csrufprotection)
+Object.defineProperty(global, '__line', {
+  get: function(){
+      return ((new Error()).stack.split("\n")[2].trim().replace(/^(at\s?)(.*)/gim, "$2 >").replace(__dirname, ""))
+  }
+})
 
 /* GET home page. */
 router.get('/', (req, res, next)=>{
@@ -39,5 +44,24 @@ router.get('/cart/:id', (req, res)=>{
     console.log(req.session.cart)
     res.redirect('/')
   })
+})
+
+//shoping cart
+router.get('/shop/cart', (req, res, next)=>{
+  if(!req.session.cart){
+    res.render('shop/cart', {product:null})
+  }
+  const cart = new Cart(req.session.cart)
+  res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
+})
+
+//Checkout
+router.get('/shop/checkout', (req, res, next)=>{
+  if(!req.session.cart){
+    res.render('shop/cart', {product:null})
+  }
+  const cart = new Cart(req.session.cart)
+  res.render('shop/checkout', { total:cart.totalprice}) 
+
 })
 module.exports = router

@@ -13,7 +13,6 @@ const hbs = require('hbs')
 const mongostore = require('connect-mongo')(session)
 var app = express()
 
-
 //passport config
 require('./config/passport')(passport)
 // //To avail login variable all in views
