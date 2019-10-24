@@ -3,6 +3,8 @@ var router = express.Router()
 var product = require('../model/product')
 // var csurf = require('csurf')
 const passport = require('passport')
+
+const order = require('../model/order')
 const Cart = require('../model/cart')
 
 // const csrufprotection = csurf()
@@ -49,19 +51,62 @@ router.get('/cart/:id', (req, res)=>{
 //shoping cart
 router.get('/shop/cart', (req, res, next)=>{
   if(!req.session.cart){
-    res.render('shop/cart', {product:null})
+   return res.render('shop/cart', {product:null})
   }
   const cart = new Cart(req.session.cart)
-  res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
+  return res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
 })
 
 //Checkout
 router.get('/shop/checkout', (req, res, next)=>{
   if(!req.session.cart){
-    res.render('shop/cart', {product:null})
+
+   return res.render('shop/cart', {product:null})
   }
   const cart = new Cart(req.session.cart)
-  res.render('shop/checkout', { total:cart.totalprice}) 
+ return res.render('shop/checkout', { total:cart.totalprice}) 
 
+})
+
+router.get('/checkout', (req, res, next)=>{
+  if(!req.session.cart){
+    console.error('no content')
+    return res.render('shop/cart', {product:null})
+   
+  }
+  const cart = new Cart(req.token.id)
+  var stripe = require('stripe')('sk_test_JbV1bq4Va4JeeMoroTktn4Tq00TKK2RT58');
+
+    // `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/cards/collecting/web#create-token
+    stripe.charges.create(
+      {
+        amount: cart.totalprice * 100,
+        currency: 'usd',
+        source: 'req.body.strip_Tocken',
+        description: 'Charge for '+cart.title,
+      },
+      function(err, charge) {
+        if(err){
+          req.flash('error', err.message)
+          console.error(' content')
+          return res.redirect('/checckout')
+        }
+        
+        var orders = new order({
+          user:req.user,
+          cart:cart,
+          name:req.body.name,
+          Address:[req.body.add, req.body.city, req.body.state, req.body.zip],
+          paymentid: charge.id
+        }).save().then(order=>{
+          req.flash('success', 'success fully ordered')
+          req.session.cart = null
+          console.error('1 content')
+          return res.redirect ('/')
+        })
+        .catch(err=>console.log(err))
+      }
+      
+    );
 })
 module.exports = router

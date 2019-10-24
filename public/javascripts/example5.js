@@ -1,3 +1,6 @@
+// Create a Stripe client.
+var stripe = Stripe('pk_test_ufpAeajoum2pZAEzsHSdsSpJ00mUMcsmGZ');
+
 (function() {
     "use strict";
   

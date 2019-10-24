@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
   
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  {{>header}}
+    </head>
+   
   <body>
-  
-  
-    {{{body}}}
-    
+    {{>header}}
+    <script   src="https://code.jquery.com/jquery-1.12.3.min.js" crossorigin="anonymous"></script>
+    <div class="contailer">
+      {{{body}}}
+    </div>
     {{!-- Bootstrap --}}
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
   </body>
