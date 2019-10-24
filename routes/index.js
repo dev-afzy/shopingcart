@@ -21,13 +21,13 @@ router.get('/', (req, res, next)=>{
       for(var i = 0; i < docs.length; i+=chunksize){
         productchunks.push(docs.slice(i, i+chunksize))
       }
-      res.render('shop/index', { title: 'Shoping cart', products:productchunks })
+     return res.render('shop/index', { title: 'Shoping cart', products:productchunks })
     })
   
 })
 
 router.get('/profile', (req, res)=>{
-  res.render('user/profile')
+return res.render('user/profile')
 })
 
 router.get('/cart/:id', (req, res)=>{
@@ -42,26 +42,26 @@ router.get('/cart/:id', (req, res)=>{
     cart.add(product, productid)
     req.session.cart = cart
     console.log(req.session.cart)
-    res.redirect('/')
+    return res.redirect('/')
   })
 })
 
 //shoping cart
 router.get('/shop/cart', (req, res, next)=>{
   if(!req.session.cart){
-    res.render('shop/cart', {product:null})
+  return  res.render('shop/cart', {product:null})
   }
   const cart = new Cart(req.session.cart)
-  res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
+  return res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
 })
 
 //Checkout
 router.get('/shop/checkout', (req, res, next)=>{
   if(!req.session.cart){
-    res.render('shop/cart', {product:null})
+   return res.render('shop/cart', {product:null})
   }
   const cart = new Cart(req.session.cart)
-  res.render('shop/checkout', { total:cart.totalprice}) 
+   return res.render('shop/checkout', { total:cart.totalprice}) 
 
 })
 module.exports = router
