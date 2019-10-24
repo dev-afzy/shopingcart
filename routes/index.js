@@ -54,69 +54,70 @@ router.get('/shop/cart', (req, res, next)=>{
 
    return res.render('shop/cart', {product:null})
 
-  
   }
   const cart = new Cart(req.session.cart)
-  return res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
+  res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice}) 
 })
 
-//Checkout
+// //Checkout
 router.get('/shop/checkout', (req, res, next)=>{
   if(!req.session.cart){
-<<<<<<< HEAD
 
-   return res.render('shop/cart', {product:null})
-  }
-  const cart = new Cart(req.session.cart)
- return res.render('shop/checkout', { total:cart.totalprice}) 
+    return res.render('shop/cart', {product:null})
+ 
+   }
 
+   console.log(req.body)
+   console.log(req.body.token)
+    const cart = new Cart(req.session.cart)
+    res.render('shop/checkout', { total:cart.totalprice}) 
+ 
+   
 })
-=======
-   return res.render('shop/cart', {product:null})
-  }
-  const cart = new Cart(req.session.cart)
-   return res.render('shop/checkout', { total:cart.totalprice}) 
->>>>order>>> 
 
-router.get('/checkout', (req, res, next)=>{
-  if(!req.session.cart){
+//checkout handle
+router.post('/shop/checkout', (req, res, next)=>{
+    if(!req.session.cart){
     console.error('no content')
     return res.render('shop/cart', {product:null})
    
   }
-  const cart = new Cart(req.token.id)
-  var stripe = require('stripe')('sk_test_JbV1bq4Va4JeeMoroTktn4Tq00TKK2RT58');
+  const cart = new Cart(req.session.cart)
 
-    // `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/cards/collecting/web#create-token
-    stripe.charges.create(
+  const stripe = require("stripe")("sk_test_JbV1bq4Va4JeeMoroTktn4Tq00TKK2RT58");
+  const token = stripe.token 
+  console.log(token)
+  // `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/cards/collecting/web#create-token
+  (async () => {
+  await stripe.charges.create(
       {
         amount: cart.totalprice * 100,
         currency: 'usd',
-        source: 'req.body.strip_Tocken',
+        source: token,
         description: 'Charge for '+cart.title,
-      },
-      function(err, charge) {
-        if(err){
-          req.flash('error', err.message)
-          console.error(' content')
-          return res.redirect('/checckout')
-        }
-        
-        var orders = new order({
-          user:req.user,
-          cart:cart,
-          name:req.body.name,
-          Address:[req.body.add, req.body.city, req.body.state, req.body.zip],
-          paymentid: charge.id
-        }).save().then(order=>{
-          req.flash('success', 'success fully ordered')
-          req.session.cart = null
-          console.error('1 content')
-          return res.redirect ('/')
-        })
-        .catch(err=>console.log(err))
       }
+      // (err, charge)=> {
+      //   if(err){
+      //     req.flash('error', err.message)
+      //     console.error(' content')
+      //     return res.redirect('shop/checkout')
+      //   }
+        
+      //   var orders = new order({
+      //     user:req.user,
+      //     cart:cart,
+      //     Address:[req.body.add, req.body.city, req.body.state, req.body.zip],
+      //     paymentid: charge.id
+      //   }).save().then(order=>{
+      //     req.flash('success', 'success fully ordered')
+      //     req.session.cart = null
+      //     console.error('1 content')
+      //     return res.redirect ('/')
+      //   })
+      //   .catch(err=>console.log(err))
+      // }
       
-    );
+    )
+  })()  
 })
 module.exports = router
