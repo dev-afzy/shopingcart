@@ -72,7 +72,7 @@ router.get('/shop/checkout', (req, res, next)=>{
 router.post('/shop/checkout', (req, res, next)=>{
     if(!req.session.cart){
     console.error('no content')
-    return res.render('/shop/cart', {product:null, name:cart.name*100, message:'ordered success full'})
+    return res.render('shop/cart', {product:null, name:cart.name*100, message:'ordered success full'})
    
   }
   console.log('post req')
@@ -93,7 +93,22 @@ router.post('/shop/checkout', (req, res, next)=>{
     currency: 'usd',
     customer: customer.id
   }))
-  .then(charge => res.render('/shop/cart', { total:cart.totalprice,  stripePublishableKey:'pk_test_ufpAeajoum2pZAEzsHSdsSpJ00mUMcsmGZ' }) )
-});
+  .then(charge => {
+    const orders = new order({
+      user:req.user,
+      cart:cart,
+      name:req.body.name,
+      Address:[req.body.address, req.body.city, req.body.state, req.body.zip],
+      paymentid: charge.id
+      })
+      orders.save().then(order=>{
+        req.flash('success', 'success fully ordered')
+        req.session.cart = null
+        console.error('1 content')
+        res.render('shop/cart', { total:cart.totalprice,
+          stripePublishableKey:'pk_test_ufpAeajoum2pZAEzsHSdsSpJ00mUMcsmGZ'})
+      }) 
+     })
+  })
 
 module.exports = router
