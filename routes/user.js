@@ -7,6 +7,9 @@ const passport = require('passport')
 
 //Model
 const User = require('../model/user')
+const order = require('../model/order')
+const Cart = require('../model/cart')
+
 
 //profile
 router.get('/profile',isAuthenticated, (req, res)=> res.render('user/profile'))
@@ -139,5 +142,10 @@ function forwardAuthenticated(req, res, next) {
     }
     res.redirect('/');      
  }
+
+ // SHOP
+
+ //shoping cart
+
 
 module.exports =router;

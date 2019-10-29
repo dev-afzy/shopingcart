@@ -24,6 +24,7 @@ require('./config/passport')(passport)
 
 var indexRouter = require('./routes/index');
 var user = require('./routes/user')
+// var shop = require('./routes/shop')
 
 mongoose.connect('mongodb://localhost:27017/shoping',   
   {useNewUrlParser:true, 
@@ -45,6 +46,8 @@ app.use(session({
   secret: 'secret',
   resave: true,
   saveUninitialized: false,
+  store: new mongostore({mongooseConnection : mongoose.connection}),
+  cookie:{maxAge: 180 * 60 *1000}
   
 }))
 
@@ -63,7 +66,6 @@ app.use((req, res, next)=>
  next()
 })
 
-// app.use(session({secret:'mysupersecrate', resave:false, saveUninitialized:false}))
 app.use(express.static(path.join(__dirname, 'public')));
 
 //To avail login variable all in views
@@ -75,6 +77,7 @@ app.use((req, res, next)=>{
 
 app.use('/', indexRouter);
 app.use('/user', user);
+// app.use('/shop', shop);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

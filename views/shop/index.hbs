@@ -1,5 +1,12 @@
 <body>
-
+    {{#if message }}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{success_msg}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {{/if}}
    {{# each products}}
     
     <div class="row bg-info d-flex justify-content-around mx-auto mt-2 mb-3 "> 
@@ -16,7 +23,7 @@
                     <div class="row ">
                         <div class="col price">${{this.price}}</div>
                         <div class="col ">
-                            <a  href="/cart/{{this.id}}" class="btn btn-success float-right">Add to Cart</a>
+                            <a  href="/shop/cart/{{this.id}}" class="btn btn-success float-right">Add to Cart</a>
                         </div> 
                     </div>    
                 </div>
