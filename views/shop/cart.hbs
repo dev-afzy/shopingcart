@@ -1,4 +1,6 @@
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
 {{#if product}}
+   
 <div class="row d-flex justify-content-center">
     <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
         <ul class="list-group">
@@ -6,23 +8,24 @@
             <li class="list-group-item">
                 {{!-- <strong>{{this.}}</strong> --}}
                 <span class="badge badge-success float-right">{{ this.qty }}</span>
-                <img src="{{this.item.imgpath}}" alt="" class="img-thumbnail mx-auto d-block float-left">
+                <img src="{{this.item.imgpath}}" alt="" class="cart border rounded mx-auto d-block float-left">
                 
                 <h3><strong class="ml-5 mt3">Name :{{ this.item.title }}</strong></h3>
                 <div><strong class="ml-5 mt-2">Price :${{this.price}}</strong>
                 </div>
+                <a href="/add-one-cart/{{ this.item._id }}" type="button" class="btn btn-default btn-sm ml-5 mt-3 border">
+                    Add <span class=" fas fa-plus" aria-hidden="true"></span> 
+                </a> 
+               <a href="/remove-one-cart/{{ this.item._id }}" type="button" class="btn btn-default btn-sm ml-5 mt-3 border">
+                    Remove <span class=" fas fa-minus" aria-hidden="true"></span> 
+                </a> 
+                <a href="/removeall-one-cart/{{ this.item._id }}" type="button" class="btn btn-default btn-sm ml-5 mt-3 border">
+                    Remove All <span class=" fas fa-minus" aria-hidden="true"></span> 
+                </a> 
                 
-                 <div class="dropdown mt-3 float-right">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown button
-                    </button>
-                    <div class="dropdown-menu" data-toggle="dropdown" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
-            </li>
+                
+                
+             </li>
             {{/each}}
         </ul>
     </div>

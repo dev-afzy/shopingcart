@@ -1,2 +1,25 @@
-
-<h1>hellow {{ name}}</h1>
+<div class="row">
+    <div class="col-md-11 col-md-offset-2 ml-5 mt-3">
+        <div><h1 >user profile</h1></div><br>
+        <hr>
+        <div>
+            <h2 class="mt-3 text-center text-danger">My Orders</h2>
+            </div>
+        
+        {{#each orders}}
+            <div class="panel panel-default mt-4">
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {{#each this.items}}
+                        <li class="list-group-item">
+                            <span class="badge badge-secondary float-right "><h4>${{this.price}}</h4></span>
+                            <h4>{{this.item.title}}  &nbsp;| &nbsp; {{this.qty}} &nbsp;Units</h4>
+                        </li>
+                        {{/each}}     
+                    </ul>
+                </div>
+                 <div class="panel-footer bg-light p-3 text-right"><h3>Total: ${{this.cart.totalprice}}</h3></div>
+                </div>
+        {{/each}}
+    </div>
+</div>

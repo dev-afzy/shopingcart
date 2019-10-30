@@ -47,6 +47,7 @@ router.get('/shop/cart/:id', (req, res)=>{
   })
 })
 
+
 //shoping cart
 router.get('/shop/cart', (req, res, next)=>{
   if(!req.session.cart){
@@ -56,6 +57,53 @@ router.get('/shop/cart', (req, res, next)=>{
   }
   const cart = new Cart(req.session.cart)
   res.render('shop/cart', {product:cart.generatearray(), totalprice:cart.totalprice, stripePublishableKey: 'pk_test_ufpAeajoum2pZAEzsHSdsSpJ00mUMcsmGZ'}) 
+})
+
+//remove by one
+router.get('/remove-one-cart/:id',(req, res)=>{
+  var productid = req.params.id
+  var cart = new Cart(req.session.cart ? req.session.cart: {})
+  
+  product.findById(productid, (err, product)=>{
+    if (err){
+      console.log(err)
+    }
+  cart.reduceByOne(productid, product)
+  req.session.cart=cart
+  return res.redirect('/shop/cart')
+  })
+})
+
+//remove all
+router.get('/removeall-one-cart/:id',(req, res)=>{
+  var productid = req.params.id
+  var cart = new Cart(req.session.cart ? req.session.cart: {})
+  
+  product.findById(productid, (err, product)=>{
+    if (err){
+      console.log(err)
+    }
+  cart.reduceitem(productid, product)
+  req.session.cart=cart
+  return res.redirect('/shop/cart')
+  })
+})
+
+//increese the quantity
+router.get('/add-one-cart/:id', (req, res)=>{
+  var productid = req.params.id
+  var cart = new Cart(req.session.cart ? req.session.cart: {})
+
+  product.findById(productid, (err, product)=>{
+    if (err){
+      console.log(err)
+    }
+    
+    cart.add(product, productid)
+    req.session.cart = cart
+    console.log(req.session.cart)
+    return res.redirect('/shop/cart')
+  })
 })
 
 //Checkout

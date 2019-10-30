@@ -6,6 +6,12 @@ justify-content: start !important;
   min-height: 180px !important;
   max-height: 180px !important;
 }
+.cart{
+  min-height: 120px !important;
+  max-height: 120px !important;
+  min-width: 150px;
+  max-width: 150px;
+}
 .price
 {
   font-size: 27px;

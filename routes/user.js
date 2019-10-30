@@ -12,11 +12,35 @@ const Cart = require('../model/cart')
 
 
 //profile
-router.get('/profile',isAuthenticated, (req, res)=> res.render('user/profile'))
+router.get('/profile',isAuthenticated, (req, res)=> {
+    order.find({user:req.user},(err, orders)=>{
+        if (err){
+            return res.write('error')
+        }
+        orders.forEach((order)=>{
+            cart = new Cart(order.cart)
+            order.items = cart.generatearray()
+            
+        })
+        console.log(orders)
+        res.render('user/profile',{orders:orders})})
+        
+    })
+    
 
-// router.use('/', forwardAuthenticated, (req, res, next)=>{
-//     next()
-// })
+//Logout
+router.get('/logout', (req, res)=>
+{
+    console.log('logout')
+    req.logout()
+    req.flash('success_msg', 'logout successfully')
+    // delete req.session.email;
+    res.redirect('/')
+})
+
+router.use('/', forwardAuthenticated, (req, res, next)=>{
+    next()
+})
 
 //Register
 router.get('/signup',(req, res)=> res.render('user/signup',))
@@ -121,15 +145,7 @@ router.post('/login', (req, res, next)=>{
       })(req, res, next)
 })
 
-//LOgout
-router.get('/logout', (req, res)=>
-{
-    console.log('logout')
-    req.logout()
-    req.flash('success_msg', 'logout successfully')
-    // delete req.session.email;
-    res.redirect('/')
-})
+
 
 
 function isAuthenticated(req, res, next) {
@@ -146,9 +162,6 @@ function forwardAuthenticated(req, res, next) {
     res.redirect('/');      
  }
 
- // SHOP
-
- //shoping cart
 
 
 module.exports =router;
