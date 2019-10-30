@@ -14,9 +14,9 @@ const Cart = require('../model/cart')
 //profile
 router.get('/profile',isAuthenticated, (req, res)=> res.render('user/profile'))
 
-router.use('/', forwardAuthenticated, (req, res, next)=>{
-    next()
-})
+// router.use('/', forwardAuthenticated, (req, res, next)=>{
+//     next()
+// })
 
 //Register
 router.get('/signup',(req, res)=> res.render('user/signup',))
@@ -75,7 +75,8 @@ router.post('/signup', (req, res)=>{
                         .then(user=>{
                             // req.session.email = email;
                             req.flash('success_msg', 'welcome')
-                            res.redirect('profile')
+                            
+                            res.redirect('/')
                         })
                         .catch(err=>console.log(err))
                     
@@ -113,21 +114,23 @@ router.post('/login', (req, res, next)=>{
            
         req.logIn(user, (err)=> {
           if (err) { return next(err); }
+          
         //   req.session.email = email;
-          res.redirect('profile')
+          res.redirect('/')
         })
       })(req, res, next)
 })
 
 //LOgout
-
 router.get('/logout', (req, res)=>
 {
-    req.logOut()
+    console.log('logout')
+    req.logout()
     req.flash('success_msg', 'logout successfully')
     // delete req.session.email;
-    res.redirect('login')
+    res.redirect('/')
 })
+
 
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {

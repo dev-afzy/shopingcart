@@ -59,7 +59,7 @@ router.get('/shop/cart', (req, res, next)=>{
 })
 
 //Checkout
-router.get('/shop/checkout', (req, res, next)=>{
+router.get('/shop/checkout',isAuthenticated, (req, res, next)=>{
   if(!req.session.cart){
     return res.render('shop/cart', {product:null})
    } 
@@ -69,7 +69,7 @@ router.get('/shop/checkout', (req, res, next)=>{
    })
 
 //checkout handle
-router.post('/shop/checkout', (req, res, next)=>{
+router.post('/shop/checkout', isAuthenticated, (req, res, next)=>{
     if(!req.session.cart){
     console.error('no content')
     return res.render('shop/cart', {product:null, name:cart.name*100, message:'ordered success full'})
@@ -117,4 +117,12 @@ router.post('/shop/checkout', (req, res, next)=>{
      })
   })
 
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    req.session.oldurl = req.url;
+    req.flash('error_msg', 'Please log in to view that resource');
+    res.redirect('/user/login');
+}
 module.exports = router

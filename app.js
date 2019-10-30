@@ -79,6 +79,7 @@ app.use('/', indexRouter);
 app.use('/user', user);
 // app.use('/shop', shop);
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
