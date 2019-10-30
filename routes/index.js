@@ -79,6 +79,11 @@ router.post('/shop/checkout', (req, res, next)=>{
   const cart = new Cart(req.session.cart)
   const amount =cart.totalprice*100;
   console.log(req.body)
+  var arr = []
+  const Address = req.body.address
+  const city =req.body.city
+  const state = req.body.state
+  const zip = req.body.zip
   // res.send('test')
   stripe.customers.create({
     
@@ -98,7 +103,8 @@ router.post('/shop/checkout', (req, res, next)=>{
       user:req.user,
       cart:cart,
       name:req.body.name,
-      Address:[req.body.address, req.body.city, req.body.state, req.body.zip],
+      address:[{Address, city,state, zip}],
+      
       paymentid: charge.id
       })
       orders.save().then(order=>{
